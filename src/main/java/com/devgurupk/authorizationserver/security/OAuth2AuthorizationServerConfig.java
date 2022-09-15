@@ -60,7 +60,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
         clients.inMemory()
                 .withClient(clientId)
                 .secret(new BCryptPasswordEncoder().encode(clientSecret))
-                .authorizedGrantTypes("password")
+                .authorizedGrantTypes("password","refresh_token")
                 .autoApprove(true)
                 .scopes("read", "write", "trust");
     }
@@ -75,7 +75,8 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
                 .tokenStore(tokenStore())
                 .tokenEnhancer(tokenEnhancerChain)
                 .authenticationManager(authenticationManager)
-                .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.OPTIONS);
+                .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.OPTIONS)
+                .userDetailsService(userDetailsService);
     }
 
     @Bean
