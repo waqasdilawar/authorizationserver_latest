@@ -4,18 +4,18 @@ CREATE SEQUENCE if not exists hibernate_sequence START 1;
 
 create table if not exists public.role
 (
-    web_id       bigint                  not null
+    web_id       bigint                  NOT NULL
         constraint pk_role
             primary key,
-    version      integer   default 0     not null,
-    date_created timestamp default now() not null,
-    date_updated timestamp default now() not null,
-    external_key varchar                 not null,
+    version      INT   DEFAULT 0     NOT NULL,
+    date_created timestamp DEFAULT now() NOT NULL,
+    date_updated timestamp DEFAULT now() NOT NULL,
+    external_key varchar                 NOT NULL,
     role_code    varchar,
-    title        varchar                 not null,
+    title        varchar                 NOT NULL,
     description  varchar,
     use          text,
-    active       boolean   default true,
+    active       boolean   DEFAULT true,
     CONSTRAINT role__use
         CHECK ((use::text = ('CUSTOMER')::text) OR (use::text = ('STAFF')::text)
             OR (use::text = ('ALL')::text))
@@ -30,31 +30,31 @@ create index ix_role__external_key
 
 create table if not exists permission_group
 (
-    web_id        bigint                                 not null
+    web_id        bigint                                 NOT NULL
         constraint permission_group_pkey
             primary key,
-    version       integer                  default 0     not null,
-    date_created  timestamp with time zone default now() not null,
-    date_updated  timestamp with time zone default now() not null,
-    description   varchar                                not null,
+    version       integer                  DEFAULT 0     NOT NULL,
+    date_created  timestamp with time zone DEFAULT now() NOT NULL,
+    date_updated  timestamp with time zone DEFAULT now() NOT NULL,
+    description   varchar                                NOT NULL,
     group_code    varchar,
     parent_web_id bigint
 );
 
 create table if not exists permission
 (
-    web_id              bigint                                 not null
+    web_id              bigint                                 NOT NULL
         constraint pk_permission
             primary key,
-    version             integer                  default 0     not null,
-    date_created        timestamp with time zone default now() not null,
-    date_updated        timestamp with time zone default now() not null,
-    permission_code     varchar                                not null,
-    title               varchar                                not null,
-    description         varchar                                not null,
+    version             integer                  DEFAULT 0     NOT NULL,
+    date_created        timestamp with time zone DEFAULT now() NOT NULL,
+    date_updated        timestamp with time zone DEFAULT now() NOT NULL,
+    permission_code     varchar                                NOT NULL,
+    title               varchar                                NOT NULL,
+    description         varchar                                NOT NULL,
     permission_group_id bigint,
     use                 text,
-    active              boolean                  default true,
+    active              boolean                  DEFAULT true,
     CONSTRAINT permission__use
         CHECK ((use::text = ('CUSTOMER')::text) OR (use::text = ('STAFF')::text)
             OR (use::text = ('ALL')::text))
@@ -64,16 +64,16 @@ comment on table permission is 'common, authentication';
 
 create table if not exists role_permission
 (
-    web_id        bigint                                 not null
+    web_id        bigint                                 NOT NULL
         constraint pk_role_permission
             primary key,
-    version       integer                  default 0     not null,
-    date_created  timestamp with time zone default now() not null,
-    date_updated  timestamp with time zone default now() not null,
-    role_id       bigint                                 not null
+    version       integer                  DEFAULT 0     NOT NULL,
+    date_created  timestamp with time zone DEFAULT now() NOT NULL,
+    date_updated  timestamp with time zone DEFAULT now() NOT NULL,
+    role_id       bigint                                 NOT NULL
         constraint fk_role_permission__role
             references role,
-    permission_id bigint                                 not null
+    permission_id bigint                                 NOT NULL
         constraint fk_role_permission__permission
             references permission
 );
@@ -90,13 +90,13 @@ create index ix_role_permission__permission
 -- web_user_* tables
 create table IF NOT EXISTS public.web_user
 (
-    web_id         bigint                                 not null
+    web_id         bigint                                 NOT NULL
         constraint pk_web_user
             primary key,
-    version        integer                  default 0     not null,
-    date_created   timestamp with time zone default now() not null,
-    date_updated   timestamp with time zone default now() not null,
-    status         integer                  default 0     not null,
+    version        integer                  DEFAULT 0     NOT NULL,
+    date_created   timestamp with time zone DEFAULT now() NOT NULL,
+    date_updated   timestamp with time zone DEFAULT now() NOT NULL,
+    status         integer                  DEFAULT 0     NOT NULL,
     first_name     varchar,
     last_name      varchar,
     email          varchar,
@@ -105,7 +105,7 @@ create table IF NOT EXISTS public.web_user
     password       varchar,
     gender         int,
     dob            timestamp with time zone,
-    active         boolean                  default true,
+    active         boolean                  DEFAULT true,
     middle_name    varchar,
     time_zone      timestamp with time zone,
     language       varchar
@@ -126,35 +126,35 @@ create unique index ix_web_user__email
 
 create table IF NOT EXISTS public.web_user_role
 (
-    web_id       bigint                                 not null
+    web_id       bigint                                 NOT NULL
         constraint pk_web_user_role
             primary key,
-    version      integer                  default 0     not null,
-    date_created timestamp with time zone default now() not null,
-    date_updated timestamp with time zone default now() not null,
+    version      integer                  DEFAULT 0     NOT NULL,
+    date_created timestamp with time zone DEFAULT now() NOT NULL,
+    date_updated timestamp with time zone DEFAULT now() NOT NULL,
     web_user_id  bigint
         constraint fk_web_user_role__web_user
             references public.web_user,
-    role_id      bigint                                 not null
+    role_id      bigint                                 NOT NULL
         CONSTRAINT fk_web_user_role__role REFERENCES role (web_id),
-    active       boolean                  default true
+    active       boolean                  DEFAULT true
 );
 
 
 create table IF NOT EXISTS public.web_user_permission
 (
-    web_id        bigint                                 not null
+    web_id        bigint                                 NOT NULL
         constraint pk_web_user_permission
             primary key,
-    version       integer                  default 0     not null,
-    date_created  timestamp with time zone default now() not null,
-    date_updated  timestamp with time zone default now() not null,
+    version       integer                  DEFAULT 0     NOT NULL,
+    date_created  timestamp with time zone DEFAULT now() NOT NULL,
+    date_updated  timestamp with time zone DEFAULT now() NOT NULL,
     web_user_id   bigint
         constraint fk_web_user_permission__web_user
             references public.web_user,
-    permission_id bigint                                 not null
+    permission_id bigint                                 NOT NULL
         CONSTRAINT fk_web_user_permission__permission REFERENCES permission (web_id),
-    active        boolean                  default true
+    active        boolean                  DEFAULT true
 );
 
 create unique index uq_web_user_permission__web_user_id
@@ -162,23 +162,23 @@ create unique index uq_web_user_permission__web_user_id
 
 create table IF NOT EXISTS public.web_user_permission_group
 (
-    web_id              bigint                                 not null
+    web_id              bigint                                 NOT NULL
         constraint pk_web_user_permission_group
             primary key,
-    version             integer                  default 0     not null,
-    date_created        timestamp with time zone default now() not null,
-    date_updated        timestamp with time zone default now() not null,
+    version             integer                  DEFAULT 0     NOT NULL,
+    date_created        timestamp with time zone DEFAULT now() NOT NULL,
+    date_updated        timestamp with time zone DEFAULT now() NOT NULL,
     web_user_id         bigint
         constraint "fk_web_user_permission_group__web_user"
             references public.web_user,
     permission_id       bigint
         constraint fk_web_user_permission_group__web_user_permission
             references public.web_user_permission,
-    permission_group_id bigint                                 not null
+    permission_group_id bigint                                 NOT NULL
         constraint fk_web_user_permission_group__permission_group
             references permission_group,
     permission          varchar(20),
-    active              boolean                  default true
+    active              boolean                  DEFAULT true
 );
 
 create unique index uq_web_user_permission_group__permission_id
